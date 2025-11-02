@@ -1,3 +1,3 @@
 #!/bin/bash
 
-sudo apt install -y fzf ripgrep bat eza zoxide plocate fd-find
+sudo apt install -y fzf ripgrep bat eza zoxide plocate fd-find vim

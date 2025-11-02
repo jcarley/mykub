@@ -1,0 +1,165 @@
+# file system
+alias ls='eza -lh --group-directories-first --icons=auto'
+alias lsa='ls -a'
+alias lt='eza --tree --level=2 --long --icons --git'
+alias lta='lt -a'
+alias ff="fzf --preview 'batcat --style=numbers --color=always {}'"
+alias fd='fdfind'
+
+# Tools
+n() { if [ "$#" -eq 0 ]; then nvim .; else nvim "$@"; fi; }
+alias bat='batcat'
+alias lzg='lazygit'
+alias lzd='lazydocker'
+
+alias flush_arp='sudo arp -d -a'
+alias flush_dns='sudo dscacheutil -flushcache'
+alias conflicts="grep -n -r '<<<<' *"
+alias myip="ifconfig en0 | grep inet | awk '{ print $2 }'"
+alias lsof="lsof -i -n -P"
+
+# command line toolkit
+function sep() {
+  printf '\n%*s\n' "$(tput cols)" '' | tr ' ' -
+}
+
+function _timestamp() {
+  date -u +"%Y%m%d.%H%M"
+}
+
+alias timestamp=_timestamp
+
+function _version() {
+  date -u +"%Y%m%d.%H%M"
+}
+
+alias version=_version
+
+alias gig=ginkgo
+alias bolt=bbolt
+alias lterm='docker run -it --rm -v $PWD:/work --workdir /work ubuntu:24.04 /bin/bash'
+
+alias fixdirs="find $1 -type d -exec chmod 755 {} +"
+alias fixfiles="ag $1 -l --nocolor -v -g "" | xargs -o chmod 644"
+
+alias path='echo -e ${PATH//:/\\n}'
+function mcd() { mkdir -p $1 && cd $1 }
+
+# Stop after sending count ECHO_REQUEST packets #
+alias ping='ping -c 5'
+# Do not wait interval 1 second, go fast #
+alias fastping='ping -c 100 -s.2'
+alias ports='netstat -tulanp'
+
+## pass options to free ##
+alias meminfo='free -m -l -t'
+## get top process eating memory
+alias psmem='ps aux | sort -nr -k 4'
+alias psmem10='ps aux | sort -nr -k 4 | head -10'
+## get top process eating cpu ##
+alias pscpu='ps aux | sort -nr -k 3'
+alias pscpu10='ps aux | sort -nr -k 3 | head -10'
+## Get server cpu info ##
+alias cpuinfo='lscpu'
+## older system use /proc/cpuinfo ##
+alias cpuinfo='less /proc/cpuinfo' ##
+## get GPU ram on desktop / laptop##
+alias gpumeminfo='grep -i --color memory /var/log/Xorg.0.log'
+
+# git aliases
+alias lg='lazygit'
+alias gt="git for-each-ref --sort=taggerdate --format '%(refname) %(taggerdate)' refs/tags"
+alias gap='git add -p'
+alias gbnm='git branch --no-merged'
+# This function is equal to the following command
+# git diff feature/us90750_update_metadata_fields develop -- app/models/getty/editorial_video_specific.rb
+ggdiff() { git diff $1 $(current_branch) -- $2 }
+
+function ggdeltag() {
+
+  if [ -z "$1" ]; then
+    echo -e "$0 deletes a tag from the local and remote git repo.\n"
+    echo -e "usage: $0 <TAG>"
+    return
+  fi
+
+  git tag -d $1 && git push origin :refs/tags/$1
+}
+
+# ------------------------------------
+# Task alias and function
+# ------------------------------------
+alias tk=task --sort none
+
+alias tkl=task -l --sort none
+
+# ------------------------------------
+# Python alias and function
+# ------------------------------------
+alias py='python'
+
+# Django manage api
+alias pm='python manage.py'
+
+# Pipenv aliases
+alias pipenv-list='for venv in ~/.local/share/virtualenvs/* ; do basename $venv; cat $venv/.project | sed "s/\(.*\)/\t\1\n/" ; done'
+
+# ------------------------------------
+# Docker alias and function
+# ------------------------------------
+
+# docker and friends
+alias d='docker'
+alias dc='docker compose'
+alias dm='docker-machine'
+
+# Get latest container ID
+alias dl="docker ps -l -q"
+
+# Get container process
+alias dps="docker ps"
+
+# Get process included stop container
+alias dpa="docker ps -a"
+
+# Get images
+alias di="docker images"
+
+# Get container IP
+alias dip="docker inspect --format '{{ .NetworkSettings.IPAddress }}'"
+
+# Run deamonized container, e.g., $dkd base /bin/echo hello
+alias dkd="docker run -d -P"
+
+# Run interactive container, e.g., $dki base /bin/bash
+alias dki="docker run -i -t -P"
+
+# Execute interactive container, e.g., $dex base /bin/bash
+alias dex="docker exec -i -t"
+
+# Stop all containers
+dstop() { docker stop $(docker ps -a -q); }
+
+# Remove all containers
+#drm() { docker rm $(docker ps -a -q); }
+
+# Stop and Remove all containers
+alias drmf='docker stop $(docker ps -a -q) && docker rm $(docker ps -a -q)'
+
+# Remove dangling images
+alias ddangle='docker rmi -f $(docker images -f "dangling=true" -q)'
+
+# Remove all images
+dri() { docker rmi $(docker images -q); }
+
+# Dockerfile build, e.g., $dbu tcnksm/test
+dbu() { docker build -t=$1 .; }
+
+# Clears all the submission containers
+alias drms='docker rm -v $(docker ps -aq -f labels=com.getty.description=submission -f status=exited)'
+
+# Monitor containers
+alias dwatch='watch -n0.5 docker stats --no-stream=true `docker ps --format "{{.Names}}"| sort`'
+
+# Show all alias related docker
+dalias() { alias | grep 'docker' | sed "s/^\([^=]*\)=\(.*\)/\1 => \2/"| sed "s/['|\']//g" | sort; }
