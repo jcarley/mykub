@@ -34,6 +34,9 @@ plugins=(golang git git-extras docker)
 
 source $ZSH/oh-my-zsh.sh
 
+initrc="$HOME/.zsh_init"
+[[ ! -a $initrc ]] || source $initrc
+
 zrcl="$HOME/.zshrc.local"
 [[ ! -a $zrcl ]] || source $zrcl
 
