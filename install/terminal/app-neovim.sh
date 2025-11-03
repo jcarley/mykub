@@ -11,3 +11,8 @@ cd -
 
 # Install luarocks and tree-sitter-cli to resolve lazyvim :checkhealth warnings
 sudo apt install -y luarocks tree-sitter-cli
+
+# Git clone lazyvim config if it doesn't already exist
+if [ ! -d "$HOME/.config/nvim" ]; then
+  git clone git@github.com:jcarley/lazyvim.git "$HOME/.config/nvim"
+fi
